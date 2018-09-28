@@ -10,3 +10,7 @@ body {
   }
 }
 
+.card-text {
+  text-align: left;
+}
+
