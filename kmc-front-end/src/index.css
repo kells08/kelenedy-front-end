@@ -14,3 +14,29 @@ body {
   text-align: left;
 }
 
+/* custom */
+.card-img-top, .fav-me {
+  padding:20px;
+}
+i {
+  padding:3px;
+}
+.options {
+  padding:0px 20px;
+}
+section.products {
+  margin-top:30px;
+}
+.card-body-fav {
+flex: 1 1 auto;
+padding: .25rem;
+}
+.fav-me-small {
+  padding-right:20px;
+}
+.details {
+  cursor: pointer;
+}
+.details span {
+  text-decoration: underline;
+}
