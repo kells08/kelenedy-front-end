@@ -26,8 +26,7 @@ class ProductCard extends Component {
         {this.state.showDetails ? <p className="card-text details ">{this.props.product.description}<span onClick={this.toggleDetails}>Hide</span></p> : <p className="card-text details "> {this.props.product.description.substring(0,50)}...&nbsp;
         <span onClick={this.toggleDetails}>Product details</span></p>
         }
-        <p className="card-text">Rating: {product.rating}
-           Star(s)</p>
+        <p className="card-text">Rating: {product.rating}&nbsp;Star(s)</p>
         <button>Add To Cart</button>
       </div>
     </div>

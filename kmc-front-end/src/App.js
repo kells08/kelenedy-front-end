@@ -11,7 +11,7 @@ const App = (props) => {
     <Router>
       <div className="App">
         <NavBar />
-        <h1 className="top-title">Kelenedy</h1>
+        <h3 className="top-title">Kelenedy Cosmetics</h3>
         <Route exact path="/" component={ShoppingContainer} />
         <Route exact path="/cart" component={Cart} />
       </div>
