@@ -3,6 +3,8 @@ import SearchBar from "../components/SearchBar";
 import Filters from "../components/Filters";
 import ProductList from "./ProductList";
 import FavoritedList from "./FavoritedList";
+import './ShoppingContainer.css';
+// import LoginForm from "../components/LoginForm";
 
 class ShoppingContainer extends Component {
 
@@ -12,25 +14,34 @@ class ShoppingContainer extends Component {
       products: [],
       favoritedProducts: [],
       showDetails: null,
-      filterBy: 'None'
+      filterBy: 'None',
+      productType: []
     }
   }
 
   componentDidMount = () => {
     this.fetchProducts('maybelline')
-    // this.filterProducts2()
+    this.scrollFunction()
   }
 
   fetchProducts = (searchTerm) => {
     // console.log(`http://makeup-api.herokuapp.com/api/v1/products.json?brand=maybelline&product_tags=${searchTerm}`)
     fetch(`http://makeup-api.herokuapp.com/api/v1/products.json?brand=${searchTerm}`).then(res => res.json()).then(products => {
       this.addProductToState(products)
+      this.addProductTypeToState(products)
     })
   }
 
-
   addProductToState = (products) => {
     this.setState({products: products})
+  }
+
+  addProductTypeToState = (products) => {
+    let product_type = this.state.products.map(product => product.product_type)
+    let options = [...new Set(product_type)]
+    options.unshift('None')
+
+    this.setState({productType: options})
   }
 
   addProductToFavList = (product) => {
@@ -38,7 +49,7 @@ class ShoppingContainer extends Component {
     if (!this.state.favoritedProducts.includes(product)) {
       this.setState(state => {
         state.favoritedProducts.push(product)
-      return state
+        return state
       })
     }
   }
@@ -46,100 +57,83 @@ class ShoppingContainer extends Component {
   removeProductToFavList = (product) => {
     this.setState(state => {
       let index = state.favoritedProducts.indexOf(product)
-      state.favoritedProducts.splice(index,1)
+      state.favoritedProducts.splice(index, 1)
       return state
     })
   }
 
   onFilterChange = (filterBy) => {
+    // destructive
+    // this.setState({
+    //   filterBy: filterBy,
+    //   products: this.state.products.filter(product => product.product_type === filterBy)
+    // },() => console.log(this.state))
     this.setState({
       filterBy: filterBy
-    },() => console.log(this.state))
+    }, () => console.log(this.state))
   }
 
-  // filterProducts2 = () => {
-  //   let product_type = this.state.products.map(product => product.product_type)
-  //
-  //   let options = [...new Set(product_type)]
-  //   options.push('None')
-  //   state changes so this doesnt work
-  //
-  //   let productResults = [ ...this.state.products]
-  //
-  //   for (let i = 0; i < options.length; i++) {
-  //   if(this.state.filterBy === options[i]) {
-  //     productResults = productResults.filter(product => product.product_type === options[i])
-  //   }
-  //   return productResults
-  // }
-  // }
-
   filterProducts = () => {
-  let productResults = [ ...this.state.products]
-    if(this.state.filterBy === 'bronzer') {
-      productResults = productResults.filter(product => product.product_type === 'bronzer')
+    let productResults = [...this.state.products]
+    this.state.filterBy === 'None'
+      ? productResults = [...this.state.products]
+      : productResults = productResults.filter(product => product.product_type === this.state.filterBy)
+    return productResults
+    // console.log(productResults)
+  }
+
+  scrollFunction = () => {
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+      document.getElementById("scrollBtn").style.display = "block";
+    } else {
+      document.getElementById("scrollBtn").style.display = "none";
     }
-    if(this.state.filterBy === 'blush') {
-      productResults = productResults.filter(product => product.product_type === 'blush')
-    }
-    if(this.state.filterBy === 'lip_liner') {
-      productResults = productResults.filter(product => product.product_type === 'lip_liner')
-    }
-    if(this.state.filterBy === 'foundation') {
-      productResults = productResults.filter(product => product.product_type === 'foundation')
-    }
-    if(this.state.filterBy === 'eyeshadow') {
-      productResults = productResults.filter(product => product.product_type === 'eyeshadow')
-    }
-    if(this.state.filterBy === 'eyeliner') {
-      productResults = productResults.filter(product => product.product_type === 'eyeliner')
-    }
-    if(this.state.filterBy === 'nail_polish') {
-      productResults = productResults.filter(product => product.product_type === 'nail_polish')
-    }
-    if(this.state.filterBy === 'lipstick') {
-      productResults = productResults.filter(product => product.product_type === 'lipstick')
-    }
-    if(this.state.filterBy === 'eyebrow') {
-      productResults = productResults.filter(product => product.product_type === 'mascara')
-    }
-    if(this.state.filterBy === 'eyebrow') {
-      productResults = productResults.filter(product => product.product_type === 'mascara')
-    }
-  return productResults
-}
+  }
+
+  // When the user clicks on the button, scroll to the top of the document
+  topFunction = () => {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+  }
+
+  login = ({ username, password }) => {
+    console.log(`Logging in ${username} with password ${password}`);
+  };
 
   render() {
-    // console.log(this.state.products)
-    // debugger
-    return (<div>
+    return (<div className="main-content">
+      <h3 className="Shop-header"></h3>
+
       <div className="container-fluid">
-      <section>
-        <div className="row">
-          <div className="col-md-12">
-            <span className="options"><SearchBar fetchProducts={this.fetchProducts}/></span>
-            <span className="options"><Filters products={this.state.products}  onFilterChange={this.onFilterChange}/></span>
+
+        <i class="fa fa-arrow-up" onClick={this.topFunction} id="scrollBtn"/>
+        <section className="searchfilter">
+          <div className="row">
+            <div className="col-md-12">
+
+              <span className="options"><SearchBar fetchProducts={this.fetchProducts}/></span>
+              <span className="options"><Filters products={this.state.products} productType={this.state.productType} onFilterChange={this.onFilterChange}/></span>
+            </div>
           </div>
-        </div>
         </section>
         <section className="products">
-        <div className="row">
-          <div className="col-md-9">
-            {
-              this.state.products.length > 0
-                ? <ProductList products={this.filterProducts()} addProductToFavList={this.addProductToFavList} />
-                : <p>Loading...</p>
-            }
+          <div className="row">
+            <div className="col-md-9 col-sm-12">
+              {
+                this.state.products.length > 0
+                  ? <ProductList products={this.filterProducts()} addProductToFavList={this.addProductToFavList}/>
+                  : <p>Loading...</p>
+              }
+            </div>
+            <div className="col-md-3 col-sm-6">
+              <h4 className="subtitle">Favorite List</h4>
+              {
+                this.state.favoritedProducts.length > 0
+                  ? <FavoritedList favList={this.state.favoritedProducts} removeProductToFavList={this.removeProductToFavList}/>
+                  : <p>Currently No Favorites</p>
+              }
+            </div>
           </div>
-          <div className="col-md-3">
-            <h3>Favorite List</h3>
-            {
-              this.state.favoritedProducts.length > 0 ?
-            <FavoritedList favList={this.state.favoritedProducts} removeProductToFavList={this.removeProductToFavList} />
-              : <p>Currently No Favorites</p>
-            }
-          </div>
-        </div>
         </section>
       </div>
     </div>)

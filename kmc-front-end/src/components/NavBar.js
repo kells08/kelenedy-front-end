@@ -1,23 +1,15 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
-
-const link = {
-  width: '100px',
-  padding: '12px',
-  margin: '0 6px 6px',
-  background: 'blue',
-  textDecoration: 'none',
-  color: 'white'
-}
+import {NavLink} from 'react-router-dom';
 
 const NavBar = () =>
-  <div>
-    <NavLink to="/" exact="exact" style={link} activeStyle={{
-        background: 'darkblue'
-      }}>Home</NavLink>
-    <NavLink to="/cart" exact="exact" style={link} activeStyle={{
-        background: 'darkblue'
-      }}>Cart</NavLink>
+  <div className="navbar">
+    <NavLink to="/" exact="exact">KELENEDY COSMETICS</NavLink>
+    <NavLink to="/cart" exact="exact" activeStyle={{
+        textDecoration: 'underline'
+      }}><i class="fa fa-shopping-cart"/></NavLink>
+    <NavLink to="/login" exact="exact">
+      <span className="login">LOG IN</span>
+    </NavLink>
   </div>
 
 export default NavBar;
